@@ -7,11 +7,17 @@ disqus:
 google-ID: 'UA-163424282-1'
 
 menu: 
-  - name: Hong's Portfolio
-    link: https://gmm117.github.io/hong-portfolio/
+  - name: Hong's Projects
     # submenu:
     #   - name: Hong's Projects
     #     link: /projects/gmm117
+    submenu:
+      - name: Portfolio
+        link: https://gmm117.github.io/hong-portfolio/
+      - name: Light Markdown
+        link: https://gmm117.github.io/light-mkeditor/
+      - name: Todo List
+        link: https://gmm117.github.io/todo-tasks/
   - name: Posts
     link: /
   - name: Tags
