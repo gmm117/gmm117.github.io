@@ -9,14 +9,19 @@ comments: true
 ---
 
 <p>
-    - DOM(Document Object Model), CSSOM(CSS Object Model) 생성
-        - Render Tree 생성
-        - 렌더링 과정
-        - Layout
-        - Paint
-    - 프론트엔드 성능 최적화
-        - 렌더링 최적화 - Reflow, Repaint 줄이기
-        - Reflow (Layout), Repaint (Paint)
+    <ul>
+        <li>DOM(Document Object Model), CSSOM(CSS Object Model) 생성</li>
+        <ul>
+            <li>Render Tree 생성</li>
+            <li>렌더링 과정</li>
+            <li>Layout, Paint</li>
+        </ul>
+        <li>프론트엔드 성능 최적화</li>
+        <ul>
+            <li>렌더링 최적화 - Reflow, Repaint 줄이기</li>
+            <li>Reflow (Layout), Repaint (Paint)</li>
+        </ul>
+    </ul>
 </p>
 <!--more-->
 
