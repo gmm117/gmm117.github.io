@@ -9,12 +9,12 @@ comments: true
 ---
 
 <p>
-    DOM(Document Object Model), CSSOM(CSS Object Model) 생성<br/>
-    &nbsp; &nbsp; &nbsp; &nbsp;Render Tree 생성<br/>
-    &nbsp; &nbsp; &nbsp; &nbsp;렌더링 과정<br/>
-    &nbsp; &nbsp; &nbsp; &nbsp;Layout, Paint<br/>
-    프론트엔드 성능 최적화<br/>
-    &nbsp; &nbsp; &nbsp; &nbsp;렌더링 최적화 - Reflow, Repaint 줄이기<br/>
+    DOM(Document Object Model), CSSOM(CSS Object Model) 생성&#10;&#13;
+    &nbsp; &nbsp; &nbsp; &nbsp;Render Tree 생성&#10;&#13;
+    &nbsp; &nbsp; &nbsp; &nbsp;렌더링 과정&#10;&#13;
+    &nbsp; &nbsp; &nbsp; &nbsp;Layout, Paint&#10;&#13;
+    프론트엔드 성능 최적화&#10;&#13;
+    &nbsp; &nbsp; &nbsp; &nbsp;렌더링 최적화 - Reflow, Repaint 줄이기&#10;&#13;
     &nbsp; &nbsp; &nbsp; &nbsp;Reflow (Layout), Repaint (Paint)
 </p>
 <!--more-->
