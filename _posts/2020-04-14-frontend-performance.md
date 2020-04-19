@@ -207,13 +207,6 @@ Javascript + Css를 조합하여 애니메이션이 많거나 레이아웃 변�
 
 ![내장 DOM 메소드를 사용](/assets/images/{{page.id}}/performance5.png)
 
-{% highlight xml %}
-{% endhighlight %}
-{% highlight java %}
-{% endhighlight %}
-{% highlight shell %}
-{% endhighlight %}
-
 <h1 style="font-weight:bold">참고사이트</h1>
 
 * <a href="https://gloriajun.github.io/frontend/2018/10/23/frontend-reflow-repaint.html" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://gloriajun.github.io/frontend/2018/10/23/frontend-reflow-repaint.html</a>
@@ -225,3 +218,40 @@ Javascript + Css를 조합하여 애니메이션이 많거나 레이아웃 변�
 * <a href="http://bit.ly/2SQXLzY" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">http://bit.ly/2SQXLzY</a>
 * <a href="https://github.com/wonism/TIL/blob/master/front-end/browser/reflow-repaint.md" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://github.com/wonism/TIL/blob/master/front-end/browser/reflow-repaint.md</a>
 * <a href="https://gist.github.com/faressoft/36cdd64faae21ed22948b458e6bf04d5" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://gist.github.com/faressoft/36cdd64faae21ed22948b458e6bf04d5</a>
+
+<h1 style="font-weight:bold">Canvas 성능향상</h1>
+
+<h2 style="color:#ff6b6b">오프스크린 캔버스로 미리 랜더링 해라</h2>
+이건 뭐 이미지프로세싱 프로그래밍 해보신 분은 다 아시는 부분일텐데, canvas를 바로바로 렌더링 하지 말고 일단 이미지 버퍼나 더블버퍼링같은 원리처럼 렌더링은 RequestAnimationFrame를 사용해서 렌더링 하라는 뜻입니다.
+
+<h2 style="color:#ff6b6b">일괄적인 드로잉 작업은 한번에 호출해라</h2>
+예를 들어 캔버스에 사각형 같은 라인을 그릴때, 라인마다 beginPath()와 stroke()를 호출하지 말고, beginPath() 호출 후 moveTo와 lineTo를 이용하여 모든 드로잉 작업을 끝낸 후 stroke()를 호출하라는 뜻입니다. 이건 샘플코드를 보시면 단박에 이해가 가실겁니다.
+
+<h2 style="color:#ff6b6b">불필요한 캔버스 상태 변경을 피해라</h2>
+불필요한 연산을 피하라는... 위와 비슷한 얘기입니다.
+
+<h2 style="color:#ff6b6b">변경된 부분의 캔버스 상태만 렌더링해라</h2>
+이미지가 변경된 부분의 Bounding box를 구해서 그 부분만 렌더링 하라는 뜻입니다.
+
+<h2 style="color:#ff6b6b">복잡한 장면엔 캔버스를 레이어로 구성해라</h2>
+이건 맨처음 얘기한 오프스크린 캔버스 얘기와도 비슷한 얘기이기도 하고, 추가로 canvas를 겹쳐서 구성해서 렌더링시켜도 GPU에선 알파 합성을 통해 한번에 렌더링되므로 이득이라고 하네요.
+
+<h2 style="color:#ff6b6b">쉐도우 블러(Blur) 이펙트를 피해라</h2>
+당연한 얘기지만 blur나 shadow 효과를 끄라는 뜻입니다. 그나저나 canvas에서 이걸 기본 지원하는건 몰랐넹..
+
+<h2 style="color:#ff6b6b">캔버스를 클리어하는 다양한 방법을 알아둬라</h2>
+HTML5의 캔버스는 Immediate mode라고 해서 이미지 버퍼링 없이 바로바로 디스플레이에 출력됩니다. 애니메이션같은걸 만들땐 다음 프레임을 그리기 위해 이전 프레임을 지워줘야 하는데... 이때 캔버스 전체를 지우지 말고 위에서 말한것 처럼 이미지가 변경된 부분의 bounding box를 추적해서 clearRect 같은걸 해주라는 뜻입니다.
+
+<h2 style="color:#ff6b6b">부동 소수점 좌표는 피해라</h2>
+이미지를 배치시킬때 좌표가 부동소수점이면 자동으로 anti-aliasing이 먹어버립니다. 위에서 blur효과는 피하라고 했으니 좌표는 항상 정수로 찍히는게 좋습니다.
+
+<h2 style="color:#ff6b6b">RequestAnimationFrame을 사용하여 최적화해라</h2>
+윈도우 프로그래밍 해보신분이라면 눈치채셨을텐데 UIThread라고 보시면 됩니다. 다만 모든 브라우저에서 지원하는게 아니라서 안타깝네요..
+
+
+<h2 style="color:#ff6b6b">DOM(Document Object Model), CSSOM(CSS Object Model) 생성</h2>
+가장 첫번째 단계는 서버로부터 받은 HTML, CSS를 다운로드 받습니다. 그리고 HTML, CSS파일은 단순한 텍스트이므로 연산과 관리가 유리하도록 Object Model로 만들게 됩니다. HTML CSS 파일은 각각 DOM Tree와 CSSOM으로 만들어집니다.
+
+* <a href="https://kuimoani.tistory.com/entry/HTML5-Canvas-%EC%84%B1%EB%8A%A5-%ED%96%A5%EC%83%81" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://kuimoani.tistory.com/entry/HTML5-Canvas-%EC%84%B1%EB%8A%A5-%ED%96%A5%EC%83%81</a>
+
+

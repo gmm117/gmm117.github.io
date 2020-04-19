@@ -675,6 +675,7 @@ console.log(secretUsers);
   console.log(secretUsers);
 })()
 ```
+
 # javascript를 통한 모듈번들러(웹팩,gulp) 기능 간단구현(ES6)
 ```html
 <!-- index.html -->
@@ -712,41 +713,6 @@ console.log(getUsers());
 addUsers("seyoung");
 console.log(getUsers());
 ```
-# time
-
-## setTimeout
-```javascript
-// setTimeout은 시간이 지난후에 기능을 메시지(message queue)에 넣어줌(스택에 빌경우 실행)
-
-setTimeout(() => console.log('setTimeout start'), 1000);
-const helloT = setTimeout(console.log, 1000, 'setTimeout start');
-clearTimeout(helloT);
-```
-
-## setInterval
-```javascript
-// Interval이 1초보다 적다면 크롬에서는 1초로 강제로 변경
-const helloT = setInterval(console.log, 5000, 'setTimeout start');
-
-clearInterval(helloT);
-```
-
-## requestAnimationFrame
-```javascript
-// 이전에는 사물의 움직이거나할 경우 setInterval을 사용했지만, cpu/그래픽카드 같은 물리적인 장치가 느릴 경우 Internal이 느려지는 문제가 있었음
-// 브라우저가 자체 프레임을 업데이트(repaint) 하기전에 호출이되서 처리되도록 하는 기능(cpu, 그래픽카드 최적화, 현재탭에서만 처리)
-requestAnimationFrame(() => console.log('animation frame'));
-```
-
-# Message Queue and Event Loop
-```javascript
-// 자바스크립트는 디폴트로 갖고 있는 않고 WebApi를 통해서 함수호출이 가능하다.
-// stack -> webapi -> queue -> stack 비워질경우 queue에 데이터를 가져와서 stack에서 로딩 후 실행된다.
-setTimeout(() => console.log("hi"), 0);
-console.log("bye");
-```
-![setTimeout](/assets/images/{{page.id}}/setTimeout.png)
-
 
 # Javascript6~10 참고사이트
 * [Nomad Courses](https://academy.nomadcoders.co/)
