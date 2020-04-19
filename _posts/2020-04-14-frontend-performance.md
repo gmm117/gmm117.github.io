@@ -8,15 +8,15 @@ tags: ['front-end performance', 'blog']
 comments: true
 ---
 
-<p>
-    DOM(Document Object Model), CSSOM(CSS Object Model) 생성&#10;&#13;
-    &nbsp; &nbsp; &nbsp; &nbsp;Render Tree 생성&#10;&#13;
-    &nbsp; &nbsp; &nbsp; &nbsp;렌더링 과정&#10;&#13;
-    &nbsp; &nbsp; &nbsp; &nbsp;Layout, Paint&#10;&#13;
-    프론트엔드 성능 최적화&#10;&#13;
-    &nbsp; &nbsp; &nbsp; &nbsp;렌더링 최적화 - Reflow, Repaint 줄이기&#10;&#13;
-    &nbsp; &nbsp; &nbsp; &nbsp;Reflow (Layout), Repaint (Paint)
-</p>
+<pre>
+    DOM(Document Object Model), CSSOM(CSS Object Model) 생성
+        Render Tree 생성
+        렌더링 과정
+        Layout, Paint
+    프론트엔드 성능 최적화
+        렌더링 최적화 - Reflow, Repaint 줄이기
+        Reflow (Layout), Repaint (Paint)
+</pre>
 <!--more-->
 
 ---

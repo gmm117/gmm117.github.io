@@ -10,9 +10,7 @@ menu:
   - name: Hong's Projects
     submenu:
       - name: Hong's Projects
-        link: /projects/microbam
-      - name: OurLegacy
-        link: /projects/ourlegacy
+        link: /projects/gmm117
   - name: Posts
     link: /
   - name: Tags
