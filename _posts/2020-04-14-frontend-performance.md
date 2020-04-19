@@ -37,7 +37,7 @@ github: "https://github.com/gmm117/gmm117.github.io"
 <h2 style="color:#ff6b6b">Render Tree 생성</h2>
 DOM Tree와 CSSOM Tree가 만들어졌으면 그 다음으로는 이 둘을 이용하여 Render Tree를 생성합니다. 순수한 요소들의 구조와 텍스트만 존재하는 DOM Tree와는 달리 Render Tree에는 스타일 정보가 설정되어 있으며 실제 화면에 표현되는 노드들로만 구성됩니다.
 
-![Render Tree 구조도]({{ site.baseurl }}/img/posts/rendering_rendertree.png)
+![Render Tree 구조도](/assets/images/{{page.id}}/rendering_rendertree.png)
 - <a href="http://bit.ly/2Okn0fG" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">Render Tree 구조도(출처 : http://bit.ly/2Okn0fG)</a>
 
 그러면 여기서 각 요소에 스타일 정보들이 설정되어 있는건 이해할 수 있겠는데 실제 화면에 표현되는 노드들로만 구성된다는 이야기에 "모든 요소는 다 화면에 표현되는거 아닌가?" 라는 의문을 가지실 것 같습니다.
