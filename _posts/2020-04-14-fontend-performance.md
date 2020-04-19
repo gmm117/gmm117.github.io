@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Performance
+title: Front-End Performance
 date: 2020-04-19 00:00:00 +0200
 published: 2020-04-19 00:00:00 +0200
 categories: development
