@@ -1,15 +1,15 @@
 # Change 'comments' to true for Disqus comments
 disqus:
   comments: true
-  disqus_shortname: 'apham'
+  disqus_shortname: 'gmm117'
 
 # If you are not using Google Analytics, please change 'google-ID' to an empty string
-google-ID: 'UA-91332049-1'
+google-ID: 'UA-163424282-1'
 
 menu: 
-  - name: Featured Projects
+  - name: Hong's Projects
     submenu:
-      - name: MicroBam
+      - name: Hong's Projects
         link: /projects/microbam
       - name: OurLegacy
         link: /projects/ourlegacy
@@ -23,11 +23,8 @@ menu:
     submenu:
       - name: GitHub
         icon: github
-        link: http://github.com/alainpham
+        link: http://github.com/gmm117
       - name: LinkedIn
         icon: linkedin-square
-        link: http://www.linkedin.com/in/alainpham
-      - name: Twitter
-        icon: twitter
-        link: https://twitter.com/koint
+        link: http://www.linkedin.com/in/승아-홍-7140991a6
     
