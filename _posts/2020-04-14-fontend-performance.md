@@ -1,10 +1,24 @@
 ---
 layout: post
 title: Performance
-categories: ['front-end performance', 'blog']
+date: 2020-04-19 00:00:00 +0200
+published: 2020-04-19 00:00:00 +0200
+categories: development
 tags: ['front-end performance', 'blog']
 comments: true
 ---
+
+<p>
+    - DOM(Document Object Model), CSSOM(CSS Object Model) 생성
+        - Render Tree 생성
+        - 렌더링 과정
+        - Layout
+        - Paint
+    - 프론트엔드 성능 최적화
+        - 렌더링 최적화 - Reflow, Repaint 줄이기
+        - Reflow (Layout), Repaint (Paint)
+</p>
+<!--more-->
 
 ---
 
@@ -13,7 +27,7 @@ comments: true
 <h2 style="color:#ff6b6b">DOM(Document Object Model), CSSOM(CSS Object Model) 생성</h2>
 가장 첫번째 단계는 서버로부터 받은 HTML, CSS를 다운로드 받습니다. 그리고 HTML, CSS파일은 단순한 텍스트이므로 연산과 관리가 유리하도록 Object Model로 만들게 됩니다. HTML CSS 파일은 각각 DOM Tree와 CSSOM으로 만들어집니다.
 
-![렌더링 과정]({{ site.baseurl }}/img/posts/rendering_dom.png)
+![렌더링 과정](/assets/images/{{page.id}}/rendering_dom.png)
 - <a href="http://bit.ly/3137pmh" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">DOM(좌) CSSOM(우)을 시각화 한 그림(출처 : http://bit.ly/3137pmh)</a>
 
 각 문서(HTML, CSS)가 어떻게 파싱되고 어떻게 DOM Tree가 되는지 자세한 과정은 Google 개발자 문서를 통해 확인할 수 있습니다.
@@ -33,7 +47,7 @@ DOM Tree와 CSSOM Tree가 만들어졌으면 그 다음으로는 이 둘을 이�
 <h2 style="color:#ff6b6b">Layout</h2>
 Layout 단계는 브라우저의 뷰포트(Viewport) 내에서 각 노드들의 정확한 위치와 크기를 계산합니다. 풀어서 얘기하자면 생성된 Render Tree 노드들이 가지고 있는 스타일과 속성에 따라서 브라우저 화면의 어느위치에 어느크기로 출력될지 계산하는 단계라고 할 수 있습니다. Layout 단계를 통해 %, vh, vw와 같이 상대적인 위치, 크기 속성은 실제 화면에 그려지는 pixel단위로 변환됩니다.
 
-![Render Tree 구조도]({{ site.baseurl }}/img/posts/rendering_layout.png)
+![Render Tree 구조도](/assets/images/{{page.id}}/rendering_layout.png)
 - <a href="http://bit.ly/3137pmh" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">Viewport 에 상대적인 요소 연산(출처 : http://bit.ly/3137pmh)</a>
 
 여기서 뷰포트(Viewport)란 그래픽이 표시되는 브라우저의 영역, 크기를 말합니다. 뷰포트는 모바일의 경우 디스플레이의 크기, PC의 경우 브라우저 창의 크기에 따라 달라집니다. 그리고 화면에 그려지는 각 요소들의 크기와 위치는 %, vh, vw와 같이 상대적으로 계산하여 그려지는 경우가 많기 때문에 viewport 크기가 달라질 경우 매번 계산을 다시해야 합니다.
@@ -171,27 +185,27 @@ Javascript + Css를 조합하여 애니메이션이 많거나 레이아웃 변�
 * 배열 대신 객체/맵을 사용
     - <a href="https://jsperf.com/finding-element-object-vs-map-vs-array/1" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">참고사이트</a>
 
-![배열 대신 객체/맵을 사용]({{ site.baseurl }}/img/posts/performance1.png)
+![배열 대신 객체/맵을 사용](/assets/images/{{page.id}}/performance1.png)
 
 * 예외를 먼저 처리하는 대신, IF문을 사용
     - <a href="https://jsperf.com/try-catch-vs-conditions/1" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">참고사이트</a>
 
-![예외를 먼저 처리하는 대신, IF문을 사용]({{ site.baseurl }}/img/posts/performance2.png)
+![예외를 먼저 처리하는 대신, IF문을 사용](/assets/images/{{page.id}}/performance2.png)
 
 * 가능한 한 반복문을 적게 사용
     - <a href="https://jsperf.com/array-function-chains-vs-single-loop-filter-map/1" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">참고사이트</a>
 
-![가능한 한 반복문을 적게 사용]({{ site.baseurl }}/img/posts/performance3.png)
+![가능한 한 반복문을 적게 사용](/assets/images/{{page.id}}/performance3.png)
 
 * 기본 반복문을 사용
     - <a href="https://jsperf.com/for-loops-in-few-different-ways/" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">참고사이트</a>
 
-![기본 반복문을 사용]({{ site.baseurl }}/img/posts/performance4.png)
+![기본 반복문을 사용](/assets/images/{{page.id}}/performance4.png)
 
 * 내장 DOM 메소드를 사용
     - <a href="https://jsperf.com/native-dom-functions-vs-jquery/1" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">참고사이트</a>
 
-![내장 DOM 메소드를 사용]({{ site.baseurl }}/img/posts/performance5.png)
+![내장 DOM 메소드를 사용](/assets/images/{{page.id}}/performance5.png)
 
 <h1 style="font-weight:bold">참고사이트</h1>
 
