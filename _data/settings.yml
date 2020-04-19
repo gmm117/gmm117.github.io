@@ -8,9 +8,10 @@ google-ID: 'UA-163424282-1'
 
 menu: 
   - name: Hong's Projects
-    submenu:
-      - name: Hong's Projects
-        link: /projects/gmm117
+    link: https://gmm117.github.io/hong-portfolio/
+    # submenu:
+    #   - name: Hong's Projects
+    #     link: /projects/gmm117
   - name: Posts
     link: /
   - name: Tags
