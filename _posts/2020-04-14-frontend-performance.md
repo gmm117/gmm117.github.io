@@ -207,6 +207,13 @@ Javascript + Css를 조합하여 애니메이션이 많거나 레이아웃 변�
 
 ![내장 DOM 메소드를 사용](/assets/images/{{page.id}}/performance5.png)
 
+{% highlight xml %}
+{% endhighlight %}
+{% highlight java %}
+{% endhighlight %}
+{% highlight shell %}
+{% endhighlight %}
+
 <h1 style="font-weight:bold">참고사이트</h1>
 
 * <a href="https://gloriajun.github.io/frontend/2018/10/23/frontend-reflow-repaint.html" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://gloriajun.github.io/frontend/2018/10/23/frontend-reflow-repaint.html</a>
