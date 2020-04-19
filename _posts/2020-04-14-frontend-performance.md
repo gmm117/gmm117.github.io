@@ -6,6 +6,7 @@ published: 2020-04-19 00:00:00 +0200
 categories: development
 tags: ['front-end performance', 'blog']
 comments: true
+github: "https://github.com/gmm117/gmm117.github.io"
 ---
 
 <pre>
@@ -14,7 +15,7 @@ comments: true
         렌더링 과정
         Layout, Paint
     프론트엔드 성능 최적화
-        렌더링 최적화 - Reflow, Repaint 줄이기
+        렌더링 최적화 : Reflow, Repaint 줄이기
         Reflow (Layout), Repaint (Paint)
 </pre>
 <!--more-->
