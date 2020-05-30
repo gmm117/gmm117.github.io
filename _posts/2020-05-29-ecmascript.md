@@ -22,7 +22,7 @@ github: "https://github.com/gmm117/gmm117.github.io"
     Array
     For ... of
     classes
-    promise/async,await/fetch
+    fetch
     Symbol/Map/Generator
 </pre>
 <!--more-->
@@ -247,6 +247,20 @@ const appleProducts = {iPhone,  iPad,  iMac};
 {% endhighlight %}
 ## 템플릿 리터럴(Template literal)
 {% highlight javascript %}
+
+// before es2015
+let sayHello1 = (aName="hong") => "hello " + aName;
+console.log(sayHello1());
+
+// after es2015
+let sayHello2 = (aName="hong") => `hello ${aName}`;
+console.log(sayHello2());
+
+console.log(`hello ${100*100}`);
+
+const add = (prev, next) => prev + next;
+console.log(`prev plus next : ${add(3,4)}`);
+
 {% endhighlight %}
 ## 디스트럭처링(Destructuring)
 
@@ -325,31 +339,7 @@ const alpha = ['a', 'b', 'c'];
 console.log([...number, ...alpha]);
 //[1, 2, 3, 4, "a", "b", "c"]
 
-const person1 = {
-  name : 'hong',
-  age : 33
-};
 
-const person2 = {
-  name1 : 'park',
-  age1: 33
-};
-
-console.log({...person1, ...person2});
-// {name: "hong", age: 33, name1: "park", age1: 33}
-
-const friends = ['choi', 'kim'];
-const newfriends = [...friends, 'seyoung'];
-
-console.log(newfriends);
-// ["choi", "kim", "seyoung"]
-
-const choi = {
-  username : 'choi'
-};
-
-console.log({...choi, password:'***123***'});
-//{username: "choi", password: "***123***"}
 {% endhighlight %}
 
 ### Rest
@@ -377,16 +367,6 @@ const setCountry = ({country="kr", ...rest}) => ({country, ...rest}); // ({count
 
 console.log(setCountry(user));
 
-const user1 = {
-  NAME : 'hong',
-  age : 36,
-  password : '**123'
-};
-
-// const 변수를 새로만들듯이 새로운 변수를 세팅
-const rename = ({NAME:name, ...rest}) => ({name, ...rest});
-
-console.log(rename(user1));
 {% endhighlight %}
 
 
@@ -462,17 +442,6 @@ fall.then(values => console.log(values));
 // Promise.race f1,f2,f3중 가장먼저 resolve, reject 되는 내용의 결과값을 제공해준다.
 const frace = Promise.race([f1, f2, f3]);
 fall.then(values => console.log(values));
-{% endhighlight %}
-
-### promises finally
-{% highlight javascript %}
-// resolve, reject이 호출되더라도 finally를 무조건 한번은 타도록 되어있음
-const p1 = new Promise((resolve, reject) => {
-    setTimeout(resolve, 3000, "before finally");
-})
-.then(value => console.log(value))
-.catch(err => console.log(err))
-.finally(() => console.log("call finally"));
 {% endhighlight %}
 
 ## 모듈(ES Module)
@@ -561,39 +530,333 @@ console.log(Object.entries(obj));  // [ ["a", 1], ["b", 2], ["c", 3] ]
 
 ## Object.getOwnPropertyDescriptors
 
+getOwnPropertyDescriptor는 인자로 객체와 속성명을 전달해 해당 속성의 속성 설명자를 반환하는 메소드입니다.
+
+Object.getOwnPropertyDescriptor(obj, prop)
+
+getOwnPropertyDescriptors는 속성명을 전달하지 않고 객체만 전달함으로 객체내의 모든 속성에 대한 속성 설명자를 반환합니다.
+
+Object.getOwnPropertyDescriptor(obj)
+
+{% highlight javascript %}
+const obj1 = {name: "Jhon", age: 24};
+
+console.log(Object.getOwnPropertyDescriptor(obj1, "name"));
+// Object {value: "Jhon", writable: true, enumerable: true, configurable: true}
+
+console.log(Object.getOwnPropertyDescriptors(obj1));
+// Object {
+//   name: {value: "Jhon", writable: true, enumerable: true, configurable: true}, 
+//   age: {value: 24, writable: true, enumerable: true, configurable: true}
+// }
+{% endhighlight %}
+
+## Trailing commas
+함수의 마지막 매개변수와 인자에도 콤마를 넣을 수 있습니다.
+
+const foo = (a, b, c,) => {}
+
+## async/await
+{% highlight javascript %}
+// promise를 사용하게 되면 사용자가 얻고자하는 값이 여러개 일경우 then/then/then을 호출하게 되어서 코드가 복잡해진다.
+const getMoviesPromise = () => {
+  fetch("https://yts.am/api/v2/list_movies.json")
+  .then(response => response.json())
+  .then(result => console.log(result))
+  .catch(err => console.log(err));
+};
+
+
+const getMoviesAsync = async( ) => {
+  const response = await fetch("https://yts.lt/api/v2/list_movies.json");
+  const json = await response.json();
+  console.log(json);
+};
+
+getMoviesAsync();
+{% endhighlight %}
+
+## Async Awaite(try catch finally)
+{% highlight javascript %}
+const getMoviesAsync = async () => {
+  try {
+     const response = await fetch("https://yts.lt/api/v2/list_movies.json");
+    const json = await response.json();
+    console.log(json); 
+  } catch(e) {
+    console.log(`Error ${e}`);
+  } finally {
+    console.log("we are done");
+  }
+};
+
+getMoviesAsync();
+{% endhighlight %}
+
+## Paraller Async Await
+{% highlight javascript %}
+const getMoviesAsync = async () => {
+  try {
+     const [moviesRespose, suggestionResponse] = await Promise.all([
+       fetch("https://yts.lt/api/v2/list_movies.json"),
+       fetch("https://yts.lt/api/v2/movie_suggestions.json")
+       ]);
+    const [movies, suggestion] = await Promise.all([
+       moviesRespose.json(),
+       suggestionResponse.json()
+    ]);
+    console.log(movies); 
+    console.log(suggestion); 
+  } catch(e) {
+    console.log(`Error ${e}`);
+  } finally {
+    console.log("we are done");
+  }
+};
+
+getMoviesAsync();
+
+{% endhighlight %}
+
+# ES2018(ES9)
+## Rest/Spread Properties
+기존의 배열에서 사용하던 rest/spread를 객체에서도 사용가능하게 되었습니다.
+{% highlight javascript %}
+// Spread
+const obj1 = {one, two, ... others};
+console.log(obj); // {one: 1, two: 2, three: 3, four: 4, five: 5}
+
+const person1 = {
+  name : 'hong',
+  age : 33
+};
+
+const person2 = {
+  name1 : 'park',
+  age1: 33
+};
+
+console.log({...person1, ...person2});
+// {name: "hong", age: 33, name1: "park", age1: 33}
+
+const friends = ['choi', 'kim'];
+const newfriends = [...friends, 'seyoung'];
+
+console.log(newfriends);
+// ["choi", "kim", "seyoung"]
+
+const choi = {
+  username : 'choi'
+};
+
+console.log({...choi, password:'***123***'});
+//{username: "choi", password: "***123***"}
+
+// Rest
+const { one, two, ...others } = { one: 1, two: 2, three: 3, four: 4, five: 5 }
+console.log(one, two, others); // 1 2 {three: 3, four: 4, five: 5}
+
+const user1 = {
+  NAME : 'hong',
+  age : 36,
+  password : '**123'
+};
+
+// const 변수를 새로만들듯이 새로운 변수를 세팅
+const rename = ({NAME:name, ...rest}) => ({name, ...rest});
+
+console.log(rename(user1));
+
+{% endhighlight %}
+
+## Promise.prototype.finally()
+then, catch, finally에서 Promise는 기존에 then과 catch만 가능했으나 이제 finally도 추가되었습니다.
+
+{% highlight javascript %}
+// resolve, reject이 호출되더라도 finally를 무조건 한번은 타도록 되어있음
+const p1 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 3000, "before finally");
+})
+.then(value => console.log(value))
+.catch(err => console.log(err))
+.finally(() => console.log("call finally"));
+{% endhighlight %}
+
+## Asynchronous iteration
+비동기 이터러블 객체를 순회하는 것이 가능해졌습니다.
+
+{% highlight javascript %}
+for await (const req of requests) {
+  console.log(req)
+}
+{% endhighlight %}
+
+# ES2019(ES10)
+## String.trimStart() & trimEnd()
+문자열의 앞이나 뒤의 공백을 제거한다.
+앞을 제거하는 trimStart와 뒤를 제거하는 trimEnd가 있다.
+
+{% highlight javascript %}
+const s = "     hello world";
+const e = "!     ";
+
+console.log(s + e + ';');
+// "     hello world!     ;"
+
+console.log(s.trimStart() + e.trimEnd() + ';');
+// "hello world!;"
+{% endhighlight %}
+
+## Optional Catch Binding
+catch 매개변수 없이도 catch 블록을 사용할 수 있습니다.
+
+{% highlight javascript %}
+// Before ES2019
+try {
+// some code
+}
+catch (err) {
+// error handling code
+}
+
+// After ES2019
+try {
+// some code
+}
+catch {
+// error handling code
+}
+
+{% endhighlight %}
+
+## Object.fromEntries()
+
+객체를 entries로 배열로 만들었다면 fromEntries로 다시 객체로 만들 수 있다는 이야기입니다. entires를 이해했다면 간단하게 아래 예제를 통해 알 수 있습니다.
+
+{% highlight javascript %}
+const obj1 = {name: "Jhon", age: 24};
+
+const entries = Object.entries(obj1); 
+console.log(entries); // [["name", "Jhone"], ["age", 24]]
+
+const fromEntries = Object.fromEntries(entries);
+console.log(fromEntries); // {name: "Jhon", age: 24}
+{% endhighlight %}
+
+## Array.flat() & flatMap()
+flat 메소드는 배열안의 배열을 쉽게 합칠 수 있게 됩니다. 
+
+{% highlight javascript %}
+const arr = [1,2,3];
+
+const map = arr.map(v => [v]);
+const flatMap = arr.flatMap(v=> [v]);
+
+console.log(map);         // [[1], [2], [3]]
+console.log(map.flat());  // [1, 2, 3]
+
+console.log(flatMap);     // [1, 2, 3]
+{% endhighlight %}
+
+# ES2020
+
+## globalThis
+예전에는 브라우저의 전역객체는 window였고 Node.js의 전역객체는 global이었습니다. 둘이 달라서 분기처리를 해줘야 했던 경우가 많았는데 이제는 globalThis라는 것으로 통일되었습니다. 물론 기존 window나 global도 존재합니다.
+
+{% highlight javascript %}
+// 브라우저에서는
+globalThis === window; // true
+
+// 노드에서는
+globalThis === global; // true
+{% endhighlight %}
+
+## optional chaining
+자바스크립트에서 가장 많이 보는 에러가 cannot read property X of undefined 또는 cannot read property Y of undefined입니다. 
+
+{% highlight javascript %}
+// 이를 방지하기 위해서 
+if (a) {
+  if (a.b) {
+    console.log(a.b.c);
+  }
+}
+// 또는
+console.log(a && a.b && a.b.c);
+
+// optional chaining a.b가 없는경우 undefined 리턴됨
+console.log(a?.b?.c);
+{% endhighlight %}
+
+## Nullish Coalescing Operator
+null이나 undefined일 때만 b를 반환합니다.
+
+{% highlight javascript %}
+0 || 'A';    // A
+0 ?? 'A';    // 0
+
+0 ? 0 : 'A'; // A
+0 ?? 'A';    // 0
+
+{% endhighlight %}
+
+## Dynamic Import
+파일 import를 동적으로 할 수 있게 되었습니다.
+
+{% highlight javascript %}
+import config from './config.js';
+
+if(response) {
+age = config.age;
+}
+
+if(response) {
+  import('./config.js') // promise를 동적으로 리턴
+  .then(config => {
+    age = config.age;
+    console.log(config);
+  }
+}
+{% endhighlight %}
+
+## Promise.allSettled
+Promise.all()은 모든 작업이 성공(reslove)해야 실행되는 특징과 달리 Promise.allSettled()은 도중에 실패(reject)되더라도 모든 실행을 할 수 있습니다.
+
+{% highlight javascript %}
+const p1 = new Promise((resolve, reject) => resolve("p1, resolved"));
+const p2 = new Promise((resolve, reject) => resolve("p2, resolved"));
+const p3 = new Promise((resolve, reject) => reject("p3, rejected"));
+
+Promise.all([p1, p2, p3])
+.then(response => console.log(response))
+.catch(err => {
+console.log(err);
+});
+/*
+console.log(response)
+{status: "fulfilled", value: "p1, resolved"}
+{status: "fulfilled", value: "p2, resolved"}
+{status: "rejected", reason: "p3, rejected"}
+*/
+
+Promise.allSettled([p1, p2, p3])
+.then(response => console.log(response))
+.catch(err => {
+console.log(err);
+});
+/*
+console.log(err);
+p3, rejected
+*/
+{% endhighlight %}
+
+
 ## 참고사이트
 <a href="https://gomugom.github.io/ecmascript-proposals-1-intro/" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://gomugom.github.io/ecmascript-proposals-1-intro/</a>
 <a href="https://junhobaik.github.io/es2016-es2020/" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://junhobaik.github.io/es2016-es2020/</a>
 <a href="https://ui.toast.com/fe-guide/ko_ES5-TO-ES6/" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://ui.toast.com/fe-guide/ko_ES5-TO-ES6/</a>
+<a href="https://www.zerocho.com/category/ECMAScript/post/5eae7480e70c21001f3e7956" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://www.zerocho.com/category/ECMAScript/post/5eae7480e70c21001f3e7956</a>
 
-
-
-# Default Values
-```javascript
-function sayHello(aName = "hong") {
-  return "Hello " + aName;
-}
-
-console.log(sayHi());
-```
-* 기존 JS6이전에는 aName이 undefined 여부를 체크한 이후에 다시 값을 세팅해야했는데, 인자에 대한 초기값 세팅이 가능해졌다.
-예) let defalutName = aName || "hong"
-
-# template literals
-```javascript
-// JS6이전
-let sayHello1 = (aName="hong") => "hello " + aName;
-console.log(sayHello1());
-
-// JS6이후
-let sayHello2 = (aName="hong") => `hello ${aName}`;
-console.log(sayHello2());
-
-console.log(`hello ${100*100}`);
-
-const add = (prev, next) => prev + next;
-console.log(`prev plus next : ${add(3,4)}`);
-```
 
 ## HTML Fragments
 ```javascript
@@ -615,24 +878,6 @@ let div = `
   </div>
 `
 body.innerHTML = div;
-```
-
-## Syled Components
-```javascript
-const styled = (newElement) => {
-	const el = document.createElement(newElement);
-	return (args) => {
-      el.style= args[0];
-      console.log(args[0]);
-      return el;
-    }
-};
-
-var element = styled('h1')`
-	border-radius : 10px;
-	color:blue;
-`;
-console.log(element);
 ```
 
 # More String Implovements
@@ -697,8 +942,6 @@ for(const str of "Helloo this is string") {
   console.log(`${str}`);
 }
 ```
-
-
   
 ## fetch
 ```javascript
@@ -709,67 +952,7 @@ fetch("https://yts.am/api/v2/list_movies.json")
 .catch(err => console.log(err))
 ```
 
-## Async Await
-```javascript
-// promise를 사용하게 되면 사용자가 얻고자하는 값이 여러개 일경우 then/then/then을 호출하게 되어서 코드가 복잡해진다.
-const getMoviesPromise = () => {
-  fetch("https://yts.am/api/v2/list_movies.json")
-  .then(response => response.json())
-  .then(result => console.log(result))
-  .catch(err => console.log(err));
-};
 
-
-const getMoviesAsync = async( ) => {
-  const response = await fetch("https://yts.lt/api/v2/list_movies.json");
-  const json = await response.json();
-  console.log(json);
-};
-
-getMoviesAsync();
-```
-
-## Async Awaite(try catch finally)
-```javascript
-const getMoviesAsync = async () => {
-  try {
-     const response = await fetch("https://yts.lt/api/v2/list_movies.json");
-    const json = await response.json();
-    console.log(json); 
-  } catch(e) {
-    console.log(`Error ${e}`);
-  } finally {
-    console.log("we are done");
-  }
-};
-
-getMoviesAsync();
-```
-
-## Paraller Async Await
-```javascript
-const getMoviesAsync = async () => {
-  try {
-     const [moviesRespose, suggestionResponse] = await Promise.all([
-       fetch("https://yts.lt/api/v2/list_movies.json"),
-       fetch("https://yts.lt/api/v2/movie_suggestions.json")
-       ]);
-    const [movies, suggestion] = await Promise.all([
-       moviesRespose.json(),
-       suggestionResponse.json()
-    ]);
-    console.log(movies); 
-    console.log(suggestion); 
-  } catch(e) {
-    console.log(`Error ${e}`);
-  } finally {
-    console.log("we are done");
-  }
-};
-
-getMoviesAsync();
-
-```
 
 
 ## Symbol
