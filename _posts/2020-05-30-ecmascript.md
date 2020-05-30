@@ -1,6 +1,6 @@
 ---
 layout: post
-title: modern javascript
+title: ecmascript
 date: 2020-02-23 00:00:00 +0200
 published: 2020-02-23 00:00:00 +0200
 categories: development
