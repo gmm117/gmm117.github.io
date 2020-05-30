@@ -1,8 +1,8 @@
 ---
 layout: post
 title: ecmascript
-date: 2020-02-23 00:00:00 +0200
-published: 2020-02-23 00:00:00 +0200
+date: 2020-05-30 00:00:00 +0200
+published: 2020-05-30 00:00:00 +0200
 categories: development
 tags: ['ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020' ]
 comments: true,
