@@ -1,10 +1,10 @@
 ---
 layout: post
 title: ecmascript
-date: 2020-05-30 00:00:00 +0200
-published: 2020-05-30 00:00:00 +0200
+date: 2020-05-29 00:00:00 +0200
+published: 2020-05-29 00:00:00 +0200
 categories: development
-tags: ['ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020' ]
+tags: ['ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', 'javascript' ]
 comments: true,
 github: "https://github.com/gmm117/gmm117.github.io"
 ---
@@ -303,7 +303,7 @@ const sayName = (name = 'World') => {
 sayName(); // "Hello, World!"
 {% endhighlight %}
 
-{% endhighlight %}
+{% highlight javascript %}
 function sayHello(aName = "hong") {
   return "Hello " + aName;
 }
@@ -482,7 +482,6 @@ const p1 = new Promise((resolve, reject) => {
 # ES2016(ES7)
 ## Array.prototype.includes
 배열 내장 함수 includes가 추가되었습니다.
-
 아이템이 존재하는지 boolean 값으로 반환
 
 Array.prototype.includes(searchElement, ?fromindex);
@@ -561,9 +560,6 @@ console.log(Object.entries(obj));  // [ ["a", 1], ["b", 2], ["c", 3] ]
 {% endhighlight %}
 
 ## Object.getOwnPropertyDescriptors
-
-
-
 
 ## 참고사이트
 <a href="https://gomugom.github.io/ecmascript-proposals-1-intro/" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://gomugom.github.io/ecmascript-proposals-1-intro/</a>
