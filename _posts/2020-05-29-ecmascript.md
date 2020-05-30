@@ -371,12 +371,28 @@ console.log(setCountry(user));
 
 
 ## 제너레이터(Generator)
+함수의 흐름을 특정 구간에 멈춰놓았다가 다시 실행할 수 있다.
+결과값을 여러번 내보낼 수 있다.
+Generator 문법이 나오면서 redux-saga, rsjx등 여러 라이브러리가 나오게 되었음
+
 {% highlight javascript %}
+function* gen() {
+  yield 1;
+  yield 2;
+  yield 3;
+  yield 4;
+}
+
+const g = gen();
+
+console.log(g.next().value); // 1
+console.log(g.next().value); // 2
+console.log(g.next().value); // 3
+console.log(g.next().value); // 4
+console.log(g.next().value); // undefined
+
 {% endhighlight %}
 ## 프로미스(Promise)
-
-
-# Promise
 
 ### create promises
 {% highlight javascript %}
@@ -445,7 +461,33 @@ fall.then(values => console.log(values));
 {% endhighlight %}
 
 ## 모듈(ES Module)
+
+### Named export
+Named export는 한 파일에서 여러 번 할 수 있다. Named export를 통해 내보낸 것 들은 추후 다른 모듈에서 내보낼 때와 같은 이름으로 import 해야 한다.
+
 {% highlight javascript %}
+export const student = 'Park';
+export const student2 = 'Ted';
+
+const student3 = 'Abby';
+export {student3};
+
+import {student, student2, student3} from 'students.js';
+import {student as park, student2 as ted, student3 as abby} from 'students.js';
+import * as students from 'students.js';
+
+{% endhighlight %}
+
+### Default export
+반면에 Default export는 한 스크립트 파일당 한 개만 사용할 수 있다. 그리고 export default의 뒤에는 표현식만 허용되므로 var, let, const등의 키워드는 사용하지 못한다.
+
+이렇게 내보낸 객체들은 모듈들에서 접근할 수 있다. 그렇다면 지금부터는 모듈에서 export 한 객체들을 가져오는 import문을 살펴보자.
+{% highlight javascript %}
+
+export default 'Jack'
+
+import jack from 'studentJack';
+
 {% endhighlight %}
 
 # ES2016(ES7)
