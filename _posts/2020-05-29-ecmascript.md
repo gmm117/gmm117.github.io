@@ -391,6 +391,39 @@ console.log(g.next().value); // 3
 console.log(g.next().value); // 4
 console.log(g.next().value); // undefined
 
+// next를 수행하면서 각각 여러 동작들을 순서에 맞게 처리가능
+function* listPeople() {
+  // 1. 동작
+	yield 'hong';
+  // 2. 동작
+	yield 'kim';
+  // 3. 동작
+	yield 'choi';
+  // 4. 동작
+	yield 'park';
+};
+
+function* friendTeller() {
+	for(const friend of friends) {
+    	yield friend;
+	}
+}
+
+const friends = ['hong', 'kim', 'choi', 'park'];
+const friendLooper = friendTeller();
+
+const listG = listPeople();
+listG.next();
+//{value: "hong", done: false}
+listG.next();
+//{value: "kim", done: false}
+listG.next();
+//{value: "choi", done: false}
+listG.next();
+//{value: "park", done: false}
+listG.next();
+//{value: undefined, done: true}
+
 {% endhighlight %}
 ## 프로미스(Promise)
 
@@ -1046,42 +1079,6 @@ map.entries();
 map.has("age");
 map.get("age");
 map.set("age", 1111); // 덮어쓰기 가능
-```
-
-## Generator
-```javascript
-// next를 수행하면서 각각 여러 동작들을 순서에 맞게 처리가능
-function* listPeople() {
-  // 1. 동작
-	yield 'hong';
-  // 2. 동작
-	yield 'kim';
-  // 3. 동작
-	yield 'choi';
-  // 4. 동작
-	yield 'park';
-};
-
-function* friendTeller() {
-	for(const friend of friends) {
-    	yield friend;
-	}
-}
-
-const friends = ['hong', 'kim', 'choi', 'park'];
-const friendLooper = friendTeller();
-
-const listG = listPeople();
-listG.next();
-//{value: "hong", done: false}
-listG.next();
-//{value: "kim", done: false}
-listG.next();
-//{value: "choi", done: false}
-listG.next();
-//{value: "park", done: false}
-listG.next();
-//{value: undefined, done: true}
 ```
 
 ## Proxies
