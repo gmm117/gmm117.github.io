@@ -17,13 +17,12 @@ github: "https://github.com/gmm117/gmm117.github.io"
     ES2019
     ES2020
     HTML Fragments
-    Syled Components
     More String Implovements
     Array
     For ... of
     classes
     fetch
-    Symbol/Map/Generator
+    Symbol/Map
 </pre>
 <!--more-->
 
