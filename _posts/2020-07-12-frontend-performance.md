@@ -259,7 +259,7 @@ CSS 표현식(expression)의 비용이 매우 높은 이유는, 문서 전체 �
 
 {% highlight css %}
 .expression { width: expression(document.documentElement.clientWidth > 0 ? '1000px' : 'auto'); } 
-{% end html %}
+{% endhighlight %}
 
 - 캐쉬를 활용한 Reflow 최소화
 {% highlight javascript %}
@@ -273,12 +273,13 @@ function collect() {
     return false;
 }
 
-{% end html %}
+{% endhighlight %}
 
 - DOM 사용 최소화 하기
 노드 조각(document.createDocumentFragment), 노드 사본(elem.cloneNode), 문자 배열([])을 활용한 노드 추가 시 아래와 코드와 같이 DOM 접근을 최소화 하여 비용을 줄일 수 있다.
 
 1. 기본적인 엘리먼트 추가 방법.
+{% highlight javascript %}
 function notReflow() {
     var elem = document.getElementById('container');
 
@@ -291,8 +292,10 @@ function notReflow() {
 
     return false;
 }
+{% endhighlight %}
 
 2. 노드 조각을 활용한 엘리먼트 추가 방법 
+{% highlight javascript %}
 function notReflow() {
     var frag = document.createDocumentFragment();
 
@@ -307,8 +310,10 @@ function notReflow() {
 
     return false;
 }
+{% endhighlight %}
 
 3. 노드 사본을 활용한 엘리먼트 추가 방법 
+{% highlight javascript %}
 function notReflow() {
     var elem = document.getElementById('container');
     var clone = elem.cloneNode(true);
@@ -324,8 +329,10 @@ function notReflow() {
  
     return false;
 }
+{% endhighlight %}
 
 4. 문자 배열을 활용한 엘리먼트 추가 방법 
+{% highlight javascript %}
 function notReflow() {
     var h = [];
     for (var i = 0; i < 10; i++) {
@@ -334,6 +341,7 @@ function notReflow() {
     document.getElementById('container').innerHTML = h;
     return false;
 }
+{% endhighlight %}
 
 상황별 테스트 결과:
 
