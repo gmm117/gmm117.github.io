@@ -16,6 +16,7 @@ github: "https://github.com/gmm117/gmm117.github.io"
         Layout, Paint
     프론트엔드 성능 최적화
         렌더링 최적화 : Reflow, Repaint 줄이기
+        reflow를 피하거나 최소화하는 방법
         Reflow (Layout), Repaint (Paint)
 </pre>
 <!--more-->
