@@ -99,7 +99,8 @@ define(["package/lib"], function (lib) {
 {% endhighlight %}
 
 <h1 style="font-weight:bold">예제코드</h1>
-<a href="https://iam-song.tistory.com/28" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://iam-song.tistory.com/28</a>
+
+<a href="https://github.com/gmm117/migration" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://github.com/gmm117/migration</a>
 
 <h1 style="font-weight:bold">참고사이트</h1>
 
