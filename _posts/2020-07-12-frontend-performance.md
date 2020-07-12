@@ -179,6 +179,176 @@ Javascript + Css를 조합하여 애니메이션이 많거나 레이아웃 변�
 <h2 style="color:#ff6b6b">프레임 줄이기</h2>
 단순히 생각하면 0.1초에 1px씩 이동하는 요소보다 3px씩 이동하는 요소가 Reflow, Repaint 연산비용이 3배가 줄어든다고 볼 수 있습니다. 따라서 부드러운 효과를 조금 줄여 성능을 개선할 수 있습니다.
 
+# reflow를 피하거나 최소화하는 방법
+클래스 변화에 따른 스타일 변화를 원할 경우, 최대한 DOM 구조 상 끝단에 위치한 노드에 추가합니다.
+
+- DOM 트리에서 가장 말단에 있는 노드에 클래스를 추가
+- 애니메이션이 들어간 엘리먼트는 가급적 position: fixed 또는 position: absolute로 지정
+  - 위치 이동을 구현한 애니메이션(넓이나 높이값 변경 등)은 reflow가 짧은 시간 내 반복적으로 일어나게 됩니다. 그래서 사용하지 않는 것이 가장 바람직하나 반드시 사용해야 한다면 애니메이션이 들어간 요소에 position: absolute 혹은 position: fixed 속성을 적용합니다. 다른 요소에는 영향을 끼치지 않으므로 페이지 전체가 아닌 해당 요소만 reflow가 발생합니다.
+- JS를 통해 스타일변화를 주어야 할 경우, 가급적 한번에 처리
+{% highlight javascript %}
+// style을 여러번 호출(7.7ms), 클래스를 통하여 스타일 변화(5.3ms)
+var div = document.getElementsByTagName('div');
+for (var i = 0; i < div.length; i++) {
+    div[i].style.height = '80px';
+    div[i].style.backgroundColor = '#00f';
+    div[i].style.display = 'inline-block';
+    div[i].style.overflow = 'hidden';
+    div[i].style.fontSize = '40px';
+    div[i].style.color = '#fff';
+}
+
+var div = document.getElementsByTagName('div');
+for (var i = 0; i < div.length; i++) {
+    div[i].className = 'block'
+}
+
+{% endhighlight %}
+
+- 인라인 스타일을 최대한 배제
+인라인 스타일(Inline Style): 한 줄짜리 짤막한 스타일, 태그 안에 직접 지정하여 사용. HTML과 섞어서 사용
+{% highlight javascript %}
+<p style='color:#ff0a00'>이 문장은 인라인 스타일이 적용되었습니다.</p>
+{% endhighlight %}
+
+- 테이블 레이아웃을 피해야한다.
+테이블 레이아웃을 사용하게 되면 테이블 값에 따라 넓이를 계산하므로 랜더링이 느려집니다. 그러므로 꼭 필요한 경우를 제외하고는 테이블 레이아웃을 사용하지 않는 것이 좋습니다. 만약 사용한다면 CSS 속성 table-layout:fixed를 사용하면 랜더링을 조금 더 빠르게 할 수 있습니다.
+
+{% highlight text %}
+10×10 테이블
+table-layout: fixed 미 적용 
+table-layout: fixed 적용 
+table-layout: fixed 미 적용(0.6ms) <  table-layout: fixed 적용(0.4ms)
+
+100×100 테이블
+table-layout: fixed 미 적용
+table-layout: fixed 적용
+table-layout:fixed 미 적용(35.4ms) < table-layout:fixed 적용(27.1ms)
+
+{% endhighlight %}
+
+- CSS 하위선택자는 필요한 만큼 정리하는 것이 좋습니다.
+reflow 자체보다는 reflow가 유발시키는 CSS Recalculation에 필요한 내용입니다. CSS 규칙은 오른쪽에서 왼쪽으로 이동합니다. 이 과정에서는 더 이상 일치하는 규칙이 없거나 잘못된 규칙이 나올 때 까지 계속됩니다. 그러므로 불필요한 선택자를 사용하는 것은 성능을 저하시킬 수 있습니다.
+
+{% highlight html %}
+<div class="reflow_box">
+  <ul class="reflow_list">
+    <li>
+      <button type="button" class="btn">버튼</button>
+    <li>
+    <li>
+      <button type="button" class="btn">버튼</button>
+    <li>
+  </ul>
+</div>
+
+/* 잘못된 예 */
+.reflow_box .reflow_list li .btn{
+    display:block;
+}
+/* 올바른 예 */
+.reflow_list .btn {
+  display:block;
+}
+
+{% endhighlight %}
+
+- IE의 경우, CSS에서의 JS표현식을 피하라.
+CSS 표현식(expression)의 비용이 매우 높은 이유는, 문서 전체 또는 문서 중 일부가 Reflow될 때마다 표현식이 다시계산되기 때문이다. 
+결국 애니메이션과 같은 변화에 의해 리플로우가 발생했을 때, 경우에 따라 초당 수천, 수만번의 표현식 계산이 진행될 수 있다는 것을 의미한다.
+
+{% highlight css %}
+.expression { width: expression(document.documentElement.clientWidth > 0 ? '1000px' : 'auto'); } 
+{% end html %}
+
+- 캐쉬를 활용한 Reflow 최소화
+{% highlight javascript %}
+
+.expression { width: expression(document.documentElement.clientWidth > 0 ? '1000px' : 'auto'); } 
+function collect() {
+    var elem = document.getElementById('container');
+    var cw = elem.style.width;
+ 
+    return parseInt(cw, 10) * parseInt(cw + document.documentElement.clientWidth, 10);
+    return false;
+}
+
+{% end html %}
+
+- DOM 사용 최소화 하기
+노드 조각(document.createDocumentFragment), 노드 사본(elem.cloneNode), 문자 배열([])을 활용한 노드 추가 시 아래와 코드와 같이 DOM 접근을 최소화 하여 비용을 줄일 수 있다.
+
+1. 기본적인 엘리먼트 추가 방법.
+function notReflow() {
+    var elem = document.getElementById('container');
+
+    for (var i = 0; i < 10; i++) {
+        var a = document.createElement('a');
+        a.href = '#';
+        a.appendChild(document.createTextNode('test' + i));
+        elem.appendChild(a);
+    }
+
+    return false;
+}
+
+2. 노드 조각을 활용한 엘리먼트 추가 방법 
+function notReflow() {
+    var frag = document.createDocumentFragment();
+
+    for (var i = 0; i < 10; i++) {
+        var a = document.createElement('a');
+        a.href = '#';
+        a.appendChild(document.createTextNode('test' + i));
+        frag.appendChild(a);
+    }
+
+    document.getElementById('container').appendChild(frag);
+
+    return false;
+}
+
+3. 노드 사본을 활용한 엘리먼트 추가 방법 
+function notReflow() {
+    var elem = document.getElementById('container');
+    var clone = elem.cloneNode(true);
+ 
+    for (var i = 0; i < 10; i++) {
+        var a = document.createElement('a');
+        a.href = '#';
+        a.appendChild(document.createTextNode('test' + i));
+        clone.appendChild(a);
+    }
+ 
+    elem.appendChild(clone);
+ 
+    return false;
+}
+
+4. 문자 배열을 활용한 엘리먼트 추가 방법 
+function notReflow() {
+    var h = [];
+    for (var i = 0; i < 10; i++) {
+        h.push('test' + i + '');
+    }
+    document.getElementById('container').innerHTML = h;
+    return false;
+}
+
+상황별 테스트 결과:
+
+첫 번째 상황: 153ms
+두 번째 상황: 136ms
+세 번째 상황: 129ms
+네 번째 상황: 127ms
+
+- 첫 번째 상황을 제외한 나머지 상황들은 성능 상 큰 차이를 보이지 않았지만, 객체 맴버(조각, 사본)를 사용한 방법보다 엘리먼트 속성인 innerHTML을 활용한 문자 배열 추가 방식이 좀 더 빠른 결과를 가져왔다.
+
+<h1 style="font-weight:bold">참고사이트</h1>
+
+<a href="https://mohwaproject.tistory.com/entry/ReflowLayout-%EA%B3%BC-Repaint-%EA%B3%BC%EC%A0%95-%EB%B0%8F-%EC%B5%9C%EC%A0%81%ED%99%94" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://mohwaproject.tistory.com/entry/ReflowLayout-%EA%B3%BC-Repaint-%EA%B3%BC%EC%A0%95-%EB%B0%8F-%EC%B5%9C%EC%A0%81%ED%99%94</a>
+<a href="https://wit.nts-corp.com/2017/06/05/4571" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://wit.nts-corp.com/2017/06/05/4571</a>
+<a href="https://mohwaproject.tistory.com/entry/DOM-%EC%82%AC%EC%9A%A9-%EC%B5%9C%EC%86%8C%ED%99%94-%ED%95%98%EA%B8%B0" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://mohwaproject.tistory.com/entry/DOM-%EC%82%AC%EC%9A%A9-%EC%B5%9C%EC%86%8C%ED%99%94-%ED%95%98%EA%B8%B0</a>
 
 <h1 style="font-weight:bold">프론트엔드 성능을 향상시키는 코딩방법</h1>
 
