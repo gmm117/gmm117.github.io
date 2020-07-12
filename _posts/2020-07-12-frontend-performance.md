@@ -181,7 +181,7 @@ Javascript + Css를 조합하여 애니메이션이 많거나 레이아웃 변�
 단순히 생각하면 0.1초에 1px씩 이동하는 요소보다 3px씩 이동하는 요소가 Reflow, Repaint 연산비용이 3배가 줄어든다고 볼 수 있습니다. 따라서 부드러운 효과를 조금 줄여 성능을 개선할 수 있습니다.
 
 # reflow를 피하거나 최소화하는 방법
-클래스 변화에 따른 스타일 변화를 원할 경우, 최대한 DOM 구조 상 끝단에 위치한 노드에 추가합니다.
+  - 클래스 변화에 따른 스타일 변화를 원할 경우, 최대한 DOM 구조 상 끝단에 위치한 노드에 추가합니다.
 
 - DOM 트리에서 가장 말단에 있는 노드에 클래스를 추가
 - 애니메이션이 들어간 엘리먼트는 가급적 position: fixed 또는 position: absolute로 지정
@@ -207,13 +207,13 @@ for (var i = 0; i < div.length; i++) {
 {% endhighlight %}
 
 - 인라인 스타일을 최대한 배제
-인라인 스타일(Inline Style): 한 줄짜리 짤막한 스타일, 태그 안에 직접 지정하여 사용. HTML과 섞어서 사용
+  - 인라인 스타일(Inline Style): 한 줄짜리 짤막한 스타일, 태그 안에 직접 지정하여 사용. HTML과 섞어서 사용
 {% highlight javascript %}
 <p style='color:#ff0a00'>이 문장은 인라인 스타일이 적용되었습니다.</p>
 {% endhighlight %}
 
 - 테이블 레이아웃을 피해야한다.
-테이블 레이아웃을 사용하게 되면 테이블 값에 따라 넓이를 계산하므로 랜더링이 느려집니다. 그러므로 꼭 필요한 경우를 제외하고는 테이블 레이아웃을 사용하지 않는 것이 좋습니다. 만약 사용한다면 CSS 속성 table-layout:fixed를 사용하면 랜더링을 조금 더 빠르게 할 수 있습니다.
+  - 테이블 레이아웃을 사용하게 되면 테이블 값에 따라 넓이를 계산하므로 랜더링이 느려집니다. 그러므로 꼭 필요한 경우를 제외하고는 테이블 레이아웃을 사용하지 않는 것이 좋습니다. 만약 사용한다면 CSS 속성 table-layout:fixed를 사용하면 랜더링을 조금 더 빠르게 할 수 있습니다.
 
 {% highlight text %}
 10×10 테이블
@@ -229,7 +229,7 @@ table-layout:fixed 미 적용(35.4ms) < table-layout:fixed 적용(27.1ms)
 {% endhighlight %}
 
 - CSS 하위선택자는 필요한 만큼 정리하는 것이 좋습니다.
-reflow 자체보다는 reflow가 유발시키는 CSS Recalculation에 필요한 내용입니다. CSS 규칙은 오른쪽에서 왼쪽으로 이동합니다. 이 과정에서는 더 이상 일치하는 규칙이 없거나 잘못된 규칙이 나올 때 까지 계속됩니다. 그러므로 불필요한 선택자를 사용하는 것은 성능을 저하시킬 수 있습니다.
+  - reflow 자체보다는 reflow가 유발시키는 CSS Recalculation에 필요한 내용입니다. CSS 규칙은 오른쪽에서 왼쪽으로 이동합니다. 이 과정에서는 더 이상 일치하는 규칙이 없거나 잘못된 규칙이 나올 때 까지 계속됩니다. 그러므로 불필요한 선택자를 사용하는 것은 성능을 저하시킬 수 있습니다.
 
 {% highlight html %}
 <div class="reflow_box">
@@ -255,8 +255,8 @@ reflow 자체보다는 reflow가 유발시키는 CSS Recalculation에 필요한 
 {% endhighlight %}
 
 - IE의 경우, CSS에서의 JS표현식을 피하라.
-CSS 표현식(expression)의 비용이 매우 높은 이유는, 문서 전체 또는 문서 중 일부가 Reflow될 때마다 표현식이 다시계산되기 때문이다. 
-결국 애니메이션과 같은 변화에 의해 리플로우가 발생했을 때, 경우에 따라 초당 수천, 수만번의 표현식 계산이 진행될 수 있다는 것을 의미한다.
+  - CSS 표현식(expression)의 비용이 매우 높은 이유는, 문서 전체 또는 문서 중 일부가 Reflow될 때마다 표현식이 다시계산되기 때문이다. 
+  - 결국 애니메이션과 같은 변화에 의해 리플로우가 발생했을 때, 경우에 따라 초당 수천, 수만번의 표현식 계산이 진행될 수 있다는 것을 의미한다.
 
 {% highlight css %}
 .expression { width: expression(document.documentElement.clientWidth > 0 ? '1000px' : 'auto'); } 
@@ -277,7 +277,7 @@ function collect() {
 {% endhighlight %}
 
 - DOM 사용 최소화 하기
-노드 조각(document.createDocumentFragment), 노드 사본(elem.cloneNode), 문자 배열([])을 활용한 노드 추가 시 아래와 코드와 같이 DOM 접근을 최소화 하여 비용을 줄일 수 있다.
+  - 노드 조각(document.createDocumentFragment), 노드 사본(elem.cloneNode), 문자 배열([])을 활용한 노드 추가 시 아래와 코드와 같이 DOM 접근을 최소화 하여 비용을 줄일 수 있다.
 
 1. 기본적인 엘리먼트 추가 방법.
 {% highlight javascript %}
@@ -355,9 +355,9 @@ function notReflow() {
 
 <h1 style="font-weight:bold">참고사이트</h1>
 
-<a href="https://mohwaproject.tistory.com/entry/ReflowLayout-%EA%B3%BC-Repaint-%EA%B3%BC%EC%A0%95-%EB%B0%8F-%EC%B5%9C%EC%A0%81%ED%99%94" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://mohwaproject.tistory.com/entry/ReflowLayout-%EA%B3%BC-Repaint-%EA%B3%BC%EC%A0%95-%EB%B0%8F-%EC%B5%9C%EC%A0%81%ED%99%94</a>
-<a href="https://wit.nts-corp.com/2017/06/05/4571" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://wit.nts-corp.com/2017/06/05/4571</a>
-<a href="https://mohwaproject.tistory.com/entry/DOM-%EC%82%AC%EC%9A%A9-%EC%B5%9C%EC%86%8C%ED%99%94-%ED%95%98%EA%B8%B0" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://mohwaproject.tistory.com/entry/DOM-%EC%82%AC%EC%9A%A9-%EC%B5%9C%EC%86%8C%ED%99%94-%ED%95%98%EA%B8%B0</a>
+* <a href="https://mohwaproject.tistory.com/entry/ReflowLayout-%EA%B3%BC-Repaint-%EA%B3%BC%EC%A0%95-%EB%B0%8F-%EC%B5%9C%EC%A0%81%ED%99%94" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://mohwaproject.tistory.com/entry/ReflowLayout-%EA%B3%BC-Repaint-%EA%B3%BC%EC%A0%95-%EB%B0%8F-%EC%B5%9C%EC%A0%81%ED%99%94</a>
+* <a href="https://wit.nts-corp.com/2017/06/05/4571" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://wit.nts-corp.com/2017/06/05/4571</a>
+* <a href="https://mohwaproject.tistory.com/entry/DOM-%EC%82%AC%EC%9A%A9-%EC%B5%9C%EC%86%8C%ED%99%94-%ED%95%98%EA%B8%B0" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://mohwaproject.tistory.com/entry/DOM-%EC%82%AC%EC%9A%A9-%EC%B5%9C%EC%86%8C%ED%99%94-%ED%95%98%EA%B8%B0</a>
 
 <h1 style="font-weight:bold">프론트엔드 성능을 향상시키는 코딩방법</h1>
 
