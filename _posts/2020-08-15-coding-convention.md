@@ -16,7 +16,7 @@ github: "https://github.com/gmm117/gmm117.github.io"
 
 ---
 
-<h1>javascript-convention</h1>
+## javascript-convention
 
 ### 파일의 이름은 소문자로 표기한다.
 ### 변수의 이름은 lowerCamelCase로 표기한다.
