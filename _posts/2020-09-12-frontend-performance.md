@@ -1,8 +1,8 @@
 ---
 layout: post
 title: Front-End Performance
-date: 2020-04-19 00:00:00 +0200
-published: 2020-04-19 00:00:00 +0200
+date: 2020-09-12 00:00:00 +0200
+published: 2020-09-12 00:00:00 +0200
 categories: development
 tags: ['front-end performance', 'blog']
 comments: true
