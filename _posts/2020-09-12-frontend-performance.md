@@ -10,53 +10,97 @@ github: "https://github.com/gmm117/gmm117.github.io"
 ---
 
 <pre>
-    DOM(Document Object Model), CSSOM(CSS Object Model) 생성
-        Render Tree 생성
-        렌더링 과정
-        Layout, Paint
+    javascript 메모리 누수
+        의도치 않은 전역 변수
+        잊혀진 타이머 또는 콜백
+        DOM 외부에서의 참조
     프론트엔드 성능 최적화
         렌더링 최적화 : Reflow, Repaint 줄이기
         reflow를 피하거나 최소화하는 방법
         Reflow (Layout), Repaint (Paint)
+    DOM(Document Object Model), CSSOM(CSS Object Model) 생성
+        Render Tree 생성
+        렌더링 과정
+        Layout, Paint
 </pre>
 <!--more-->
 
 ---
 
-<h1 style="font-weight:bold">렌더링 과정</h1>
+<h1 style="font-weight:bold">javascript 메모리 누수</h1>
 
-<h2 style="color:#ff6b6b">DOM(Document Object Model), CSSOM(CSS Object Model) 생성</h2>
-가장 첫번째 단계는 서버로부터 받은 HTML, CSS를 다운로드 받습니다. 그리고 HTML, CSS파일은 단순한 텍스트이므로 연산과 관리가 유리하도록 Object Model로 만들게 됩니다. HTML CSS 파일은 각각 DOM Tree와 CSSOM으로 만들어집니다.
+## 의도치 않은 전역 변수
+ - 전역변수는 메모리를 해제할 수가 없다.(null 처리 또는 재할당 되지 않는 경우)
+{% highlight javascript %}
 
-![렌더링 과정](/assets/images/{{page.id}}/rendering_dom.png){: width="100%" }
-- <a href="http://bit.ly/3137pmh" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">DOM(좌) CSSOM(우)을 시각화 한 그림(출처 : http://bit.ly/3137pmh)</a>
+// 브라우저의 경우 글로벌 객체는 window다.
+function foo(arg) {
+    bar = "this is a hidden global variable";
+}
 
-각 문서(HTML, CSS)가 어떻게 파싱되고 어떻게 DOM Tree가 되는지 자세한 과정은 Google 개발자 문서를 통해 확인할 수 있습니다.
+function foo() {
+    this.variable = "potential accidental global";
+}
 
-여기서 좀더 TMI를 추가하자면 렌더링 엔진은 더 나은 사용자경험을 위해 가능한 빠르게 내용을 표시하게 만들어졌습니다. 따라서 모든 HTML 파싱이 끝나기도 전에 이후의 과정을 수행하여 미리 사용자에게 보여줄 수 있는 일부 내용들을 출력하게 됩니다. 
+// Foo가 호출되면, this는 글로벌 객체인 윈도우를 가리키게 된다.
+foo();
 
-<h2 style="color:#ff6b6b">Render Tree 생성</h2>
-DOM Tree와 CSSOM Tree가 만들어졌으면 그 다음으로는 이 둘을 이용하여 Render Tree를 생성합니다. 순수한 요소들의 구조와 텍스트만 존재하는 DOM Tree와는 달리 Render Tree에는 스타일 정보가 설정되어 있으며 실제 화면에 표현되는 노드들로만 구성됩니다.
+// use strict 엄격한 모드로 선언해서 실수를 방지한다.
 
-![Render Tree 구조도](/assets/images/{{page.id}}/rendering_rendertree.png){: width="100%" }{: width="100%" }
-- <a href="http://bit.ly/2Okn0fG" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">Render Tree 구조도(출처 : http://bit.ly/2Okn0fG)</a>
+{% endhighlight %}
 
-그러면 여기서 각 요소에 스타일 정보들이 설정되어 있는건 이해할 수 있겠는데 실제 화면에 표현되는 노드들로만 구성된다는 이야기에 "모든 요소는 다 화면에 표현되는거 아닌가?" 라는 의문을 가지실 것 같습니다.
+## 잊혀진 타이머 또는 콜백
+{% highlight javascript %}
 
-결론을 말하면 네, 아닙니다. 간단한 예로 display: none 속성이 설정된 노드는 화면에 어떠한 공간도 차지하지 않기 때문에 Render Tree를 만드는 과정에서 제외됩니다. 여기서 조금만 더 팁을 드리자면 visibility: invisible 은 display: none과 비슷하게 동작하지만, 공간은 차지하고 요소가 보이지 않게만 하기 때문에 Render Tree에 포함됩니다.
+var someResource = getData();
+setInterval(function() {
+    var node = document.getElementById('Node');
+    if(node) {
+        // Do stuff with node and someResource.
+        node.innerHTML = JSON.stringify(someResource));
+    }
+}, 1000);
 
-<h2 style="color:#ff6b6b">Layout</h2>
-Layout 단계는 브라우저의 뷰포트(Viewport) 내에서 각 노드들의 정확한 위치와 크기를 계산합니다. 풀어서 얘기하자면 생성된 Render Tree 노드들이 가지고 있는 스타일과 속성에 따라서 브라우저 화면의 어느위치에 어느크기로 출력될지 계산하는 단계라고 할 수 있습니다. Layout 단계를 통해 %, vh, vw와 같이 상대적인 위치, 크기 속성은 실제 화면에 그려지는 pixel단위로 변환됩니다.
 
-![Render Tree 구조도](/assets/images/{{page.id}}/rendering_layout.png){: width="100%" }
-- <a href="http://bit.ly/3137pmh" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">Viewport 에 상대적인 요소 연산(출처 : http://bit.ly/3137pmh)</a>
+// 이 element는 onClick에서 참조됨
+// 과거 특정 브라우저 (IE6)가 순환 참조를 잘 관리하지 못했기 때문에 이 부분은 특히 중요
+var element = document.getElementById('button');
 
-여기서 뷰포트(Viewport)란 그래픽이 표시되는 브라우저의 영역, 크기를 말합니다. 뷰포트는 모바일의 경우 디스플레이의 크기, PC의 경우 브라우저 창의 크기에 따라 달라집니다. 그리고 화면에 그려지는 각 요소들의 크기와 위치는 %, vh, vw와 같이 상대적으로 계산하여 그려지는 경우가 많기 때문에 viewport 크기가 달라질 경우 매번 계산을 다시해야 합니다.
+function onClick(event) {
+    element.innerHtml = 'text';
+}
 
-<h2 style="color:#ff6b6b">Paint</h2>
-Layout 계산이 완료되면 이제 요소들을 실제 화면을 그리게 됩니다. 이전 단계에서 이미 요소들의 위치와 크기, 스타일 계산이 완료된 Render Tree 를 이용해 실제 픽셀 값을 채워넣게 됩니다. 이 때 텍스트, 색, 이미지, 그림자 효과등이 모두 처리되어 그려집니다.
+element.addEventListener('click', onClick);
 
-이 때 처리해야 하는 스타일이 복잡할수록 Paint 단계에 소요되는 시간이 늘어나게 됩니다. 간단한 예시로 단순한 단색 background-color의 경우 paint 속도가 빠르지만 그라데이션이나 그림자 효과등은 painting 소요시간이 비교적 더 오래 소요됩니다.
+// 객체를 없애기전에 이러한 observer를 명시적으로 제거하는 것은 좋은 관례
+element.removeEventListener('click', onClick);
+element.parentNode.removeChild(element);
+
+{% endhighlight %}
+
+## DOM 외부에서의 참조
+{% highlight javascript %}
+// 
+var elements = {
+    button: document.getElementById('button'),
+    image: document.getElementById('image'),
+    text: document.getElementById('text')
+};
+
+function doStuff() {
+    image.src = 'http://some.url/image';
+    button.click();
+    console.log(text.innerHTML);
+}
+
+function removeButton() {
+    document.body.removeChild(document.getElementById('button'));
+
+    // 이 시점에서도 여전히 elements에서 button의 참조를 가지고 있다.
+    // 이 경우 button element는 여전히 메모리에 있으며, GC에 의해 해제 될 수 없다.
+}
+
+{% endhighlight %}
 
 
 <h1 style="font-weight:bold">프론트엔드 성능 최적화</h1>
@@ -432,5 +476,42 @@ HTML5의 캔버스는 Immediate mode라고 해서 이미지 버퍼링 없이 바
 가장 첫번째 단계는 서버로부터 받은 HTML, CSS를 다운로드 받습니다. 그리고 HTML, CSS파일은 단순한 텍스트이므로 연산과 관리가 유리하도록 Object Model로 만들게 됩니다. HTML CSS 파일은 각각 DOM Tree와 CSSOM으로 만들어집니다.
 
 * <a href="https://kuimoani.tistory.com/entry/HTML5-Canvas-%EC%84%B1%EB%8A%A5-%ED%96%A5%EC%83%81" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">https://kuimoani.tistory.com/entry/HTML5-Canvas-%EC%84%B1%EB%8A%A5-%ED%96%A5%EC%83%81</a>
+
+
+<h1 style="font-weight:bold">렌더링 과정</h1>
+
+<h2 style="color:#ff6b6b">DOM(Document Object Model), CSSOM(CSS Object Model) 생성</h2>
+가장 첫번째 단계는 서버로부터 받은 HTML, CSS를 다운로드 받습니다. 그리고 HTML, CSS파일은 단순한 텍스트이므로 연산과 관리가 유리하도록 Object Model로 만들게 됩니다. HTML CSS 파일은 각각 DOM Tree와 CSSOM으로 만들어집니다.
+
+![렌더링 과정](/assets/images/{{page.id}}/rendering_dom.png){: width="100%" }
+- <a href="http://bit.ly/3137pmh" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">DOM(좌) CSSOM(우)을 시각화 한 그림(출처 : http://bit.ly/3137pmh)</a>
+
+각 문서(HTML, CSS)가 어떻게 파싱되고 어떻게 DOM Tree가 되는지 자세한 과정은 Google 개발자 문서를 통해 확인할 수 있습니다.
+
+여기서 좀더 TMI를 추가하자면 렌더링 엔진은 더 나은 사용자경험을 위해 가능한 빠르게 내용을 표시하게 만들어졌습니다. 따라서 모든 HTML 파싱이 끝나기도 전에 이후의 과정을 수행하여 미리 사용자에게 보여줄 수 있는 일부 내용들을 출력하게 됩니다. 
+
+<h2 style="color:#ff6b6b">Render Tree 생성</h2>
+DOM Tree와 CSSOM Tree가 만들어졌으면 그 다음으로는 이 둘을 이용하여 Render Tree를 생성합니다. 순수한 요소들의 구조와 텍스트만 존재하는 DOM Tree와는 달리 Render Tree에는 스타일 정보가 설정되어 있으며 실제 화면에 표현되는 노드들로만 구성됩니다.
+
+![Render Tree 구조도](/assets/images/{{page.id}}/rendering_rendertree.png){: width="100%" }{: width="100%" }
+- <a href="http://bit.ly/2Okn0fG" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">Render Tree 구조도(출처 : http://bit.ly/2Okn0fG)</a>
+
+그러면 여기서 각 요소에 스타일 정보들이 설정되어 있는건 이해할 수 있겠는데 실제 화면에 표현되는 노드들로만 구성된다는 이야기에 "모든 요소는 다 화면에 표현되는거 아닌가?" 라는 의문을 가지실 것 같습니다.
+
+결론을 말하면 네, 아닙니다. 간단한 예로 display: none 속성이 설정된 노드는 화면에 어떠한 공간도 차지하지 않기 때문에 Render Tree를 만드는 과정에서 제외됩니다. 여기서 조금만 더 팁을 드리자면 visibility: invisible 은 display: none과 비슷하게 동작하지만, 공간은 차지하고 요소가 보이지 않게만 하기 때문에 Render Tree에 포함됩니다.
+
+<h2 style="color:#ff6b6b">Layout</h2>
+Layout 단계는 브라우저의 뷰포트(Viewport) 내에서 각 노드들의 정확한 위치와 크기를 계산합니다. 풀어서 얘기하자면 생성된 Render Tree 노드들이 가지고 있는 스타일과 속성에 따라서 브라우저 화면의 어느위치에 어느크기로 출력될지 계산하는 단계라고 할 수 있습니다. Layout 단계를 통해 %, vh, vw와 같이 상대적인 위치, 크기 속성은 실제 화면에 그려지는 pixel단위로 변환됩니다.
+
+![Render Tree 구조도](/assets/images/{{page.id}}/rendering_layout.png){: width="100%" }
+- <a href="http://bit.ly/3137pmh" target="_blank" style="font-size=30px; color: #4dabf7; text-decoration:underline;">Viewport 에 상대적인 요소 연산(출처 : http://bit.ly/3137pmh)</a>
+
+여기서 뷰포트(Viewport)란 그래픽이 표시되는 브라우저의 영역, 크기를 말합니다. 뷰포트는 모바일의 경우 디스플레이의 크기, PC의 경우 브라우저 창의 크기에 따라 달라집니다. 그리고 화면에 그려지는 각 요소들의 크기와 위치는 %, vh, vw와 같이 상대적으로 계산하여 그려지는 경우가 많기 때문에 viewport 크기가 달라질 경우 매번 계산을 다시해야 합니다.
+
+<h2 style="color:#ff6b6b">Paint</h2>
+Layout 계산이 완료되면 이제 요소들을 실제 화면을 그리게 됩니다. 이전 단계에서 이미 요소들의 위치와 크기, 스타일 계산이 완료된 Render Tree 를 이용해 실제 픽셀 값을 채워넣게 됩니다. 이 때 텍스트, 색, 이미지, 그림자 효과등이 모두 처리되어 그려집니다.
+
+이 때 처리해야 하는 스타일이 복잡할수록 Paint 단계에 소요되는 시간이 늘어나게 됩니다. 간단한 예시로 단순한 단색 background-color의 경우 paint 속도가 빠르지만 그라데이션이나 그림자 효과등은 painting 소요시간이 비교적 더 오래 소요됩니다.
+
 
 
